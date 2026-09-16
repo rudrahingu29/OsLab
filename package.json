@@ -1,0 +1,27 @@
+{
+  "name": "oslab-monorepo",
+  "version": "1.0.0",
+  "description": "OSLab — Interactive Operating System Learning & Virtual Laboratory",
+  "private": true,
+  "scripts": {
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:backend": "npm --prefix backend run dev",
+    "build:frontend": "npm --prefix frontend run build",
+    "build:backend": "npm --prefix backend run build",
+    "build": "npm run build:backend && npm run build:frontend",
+    "install:all": "npm --prefix backend install && npm --prefix frontend install",
+    "test:backend": "npm --prefix backend test"
+  },
+  "keywords": [
+    "operating-systems",
+    "os-simulator",
+    "react",
+    "express",
+    "mongodb",
+    "typescript",
+    "vercel",
+    "render"
+  ],
+  "author": "",
+  "license": "MIT"
+}

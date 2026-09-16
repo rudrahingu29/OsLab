@@ -1,0 +1,13 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table th, .table td {
+  padding: var(--spacing-3);
+  text-align: left;
+  border-bottom: 1px solid var(--color-bg-tertiary);
+}
+.table th {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}

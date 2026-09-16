@@ -1,0 +1,325 @@
+.taskbarWrapper {
+  position: relative;
+  width: 100%;
+  z-index: 200;
+  box-sizing: border-box;
+}
+
+.taskbar {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding: 0 var(--spacing-4);
+  gap: var(--spacing-4);
+  box-sizing: border-box;
+}
+
+.startButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  background-color: var(--color-primary);
+  color: #fff;
+  border: none;
+  padding: var(--spacing-2) var(--spacing-4);
+  font-family: var(--font-family);
+  font-size: var(--font-xs);
+  font-weight: var(--weight-bold);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.startButton:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.startButtonActive {
+  transform: scale(0.97);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.divider {
+  width: 1px;
+  height: 24px;
+  background-color: var(--color-border);
+}
+
+.apps {
+  display: flex;
+  gap: var(--spacing-2);
+  flex-grow: 1;
+  overflow-x: auto;
+  align-items: center;
+  height: 100%;
+}
+
+/* Hide scrollbar for taskbar apps */
+.apps::-webkit-scrollbar {
+  display: none;
+}
+
+.appButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: var(--font-xs);
+  font-weight: var(--weight-medium);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  max-width: 140px;
+}
+
+.appButton:hover {
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+}
+
+.active {
+  background-color: var(--color-surface) !important;
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.1);
+}
+
+.appTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tray {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  font-size: var(--font-xs);
+  color: var(--color-text-secondary);
+}
+
+.trayStat {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  padding: 0.25rem var(--spacing-2);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+}
+
+.pulseGreen {
+  color: var(--color-success);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+
+/* Floating Start Menu Panel */
+.startMenu {
+  position: absolute;
+  bottom: 56px;
+  left: var(--spacing-4);
+  width: 520px;
+  height: 380px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl), 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+  display: flex;
+  overflow: hidden;
+}
+
+.startMenuLeft {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-4);
+  border-right: 1px solid var(--color-border);
+}
+
+.systemHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-4);
+}
+
+.sysIcon {
+  color: var(--color-primary);
+}
+
+.sysTitle {
+  font-size: var(--font-xs);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+}
+
+.sysSubtitle {
+  font-size: 10px;
+  color: var(--color-text-muted);
+}
+
+.searchBar {
+  position: relative;
+  margin-bottom: var(--spacing-4);
+}
+
+.searchIcon {
+  position: absolute;
+  left: var(--spacing-3);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+}
+
+.searchInput {
+  width: 100%;
+  height: 32px;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding-left: var(--spacing-8);
+  padding-right: var(--spacing-3);
+  font-family: var(--font-family);
+  font-size: var(--font-xs);
+  color: var(--color-text-primary);
+  box-sizing: border-box;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.menuScrollArea {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.sectionLabel {
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--spacing-2);
+}
+
+.appsListStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.startMenuItem {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: left;
+  transition: background-color var(--transition-fast);
+}
+
+.startMenuItem:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+.startItemIcon {
+  font-size: var(--font-lg);
+  margin-right: var(--spacing-3);
+}
+
+.startItemInfo {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.startItemTitle {
+  font-size: var(--font-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.startItemDesc {
+  font-size: 10px;
+  color: var(--color-text-muted);
+}
+
+.itemArrow {
+  color: var(--color-text-muted);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.startMenuItem:hover .itemArrow {
+  opacity: 1;
+}
+
+.noResults {
+  text-align: center;
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+  padding: var(--spacing-6);
+}
+
+/* Start Menu Right Column (Statistics panel) */
+.startMenuRight {
+  width: 140px;
+  background-color: var(--color-bg-secondary);
+  padding: var(--spacing-4);
+  display: flex;
+  flex-direction: column;
+}
+
+.sideStats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.statLabel {
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sideStatBlock {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: var(--spacing-3);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.sideStatVal {
+  font-size: var(--font-sm);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+}
+
+.sideStatName {
+  font-size: 9px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}

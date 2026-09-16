@@ -1,0 +1,98 @@
+================================================================================
+                    OSLAB DESIGN SYSTEM & UI LANGUAGE SPECIFICATION
+================================================================================
+Version: 2.0.0
+Architecture: Dark-Mode First, Glassmorphic Modern Academic Operating Systems Platform
+Last Updated: 2026-08-23
+
+--------------------------------------------------------------------------------
+1. BRAND IDENTITIES & CORE DESIGN PHILOSOPHY
+--------------------------------------------------------------------------------
+- Purpose: A top-tier, university-grade academic platform for learning Operating
+  System concepts, running virtual kernel simulations, and analyzing hardware labs.
+- Visual Language: Dark-mode aesthetic with ambient glow accents, glassmorphic cards,
+  high-contrast typography, and crisp status indicators.
+- Core Color Palette:
+  * Primary Accent: Cyan / Electric Blue (#3B82F6 / #06B6D4) - CPU & System Actions
+  * Success Accent: Emerald Green (#10B981 / #22C55E) - Completed States & Realism Mode
+  * Secondary Accent: Violet / Purple (#8B5CF6 / #A78BFA) - Memory Labs & Stats
+  * Warning Accent: Amber / Gold (#F59E0B) - Pending Requests & Interrupts
+  * Danger Accent: Rose / Crimson (#EF4444) - Terminated Processes & Errors
+  * Dark Surface Background: Deep Slate (#0F172A / #1E293B / #020617)
+
+--------------------------------------------------------------------------------
+2. CSS DESIGN TOKENS (ROOT VARIABLES)
+--------------------------------------------------------------------------------
+:root {
+  /* Color Tokens */
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-bg: #0f172a;
+  --color-bg-secondary: #1e293b;
+  --color-bg-tertiary: #334155;
+  --color-surface: rgba(30, 41, 59, 0.7);
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+
+  /* Typography Tokens */
+  --font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-xs: 0.75rem;
+  --font-sm: 0.85rem;
+  --font-md: 0.95rem;
+  --font-lg: 1.25rem;
+  --font-xl: 1.6rem;
+  --font-2xl: 2.25rem;
+
+  /* Spacing & Radii */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 20px;
+  --radius-full: 9999px;
+}
+
+--------------------------------------------------------------------------------
+3. COMPONENT PATTERNS & UI SPECIFICATIONS
+--------------------------------------------------------------------------------
+
+A. HERO BANNERS
+   - Background: Gradient (135deg, rgba(15, 23, 42, 0.9) to rgba(30, 41, 59, 0.8))
+   - Border: 1px solid var(--color-border)
+   - Padding: 1.75rem
+   - Includes: Icon title group, subtitle description, live progress bar, and stat badges.
+
+B. INTERACTIVE CARDS
+   - Background: var(--color-bg-secondary) (#1E293B)
+   - Border: 1px solid var(--color-border)
+   - Hover Effect: translateY(-4px), border-color transition to accent color (rgba(59,130,246,0.4))
+   - Radius: var(--radius-lg) (12px)
+
+C. BADGES & CHIPS
+   - Active / Recommended: Background rgba(59,130,246,0.15), Border 1px solid rgba(59,130,246,0.3), Text #3B82F6
+   - Realism / Completed: Background rgba(16,185,129,0.15), Border 1px solid rgba(16,185,129,0.3), Text #10B981
+   - Memory / Special: Background rgba(139,92,246,0.15), Border 1px solid rgba(139,92,246,0.3), Text #8B5CF6
+
+D. BUTTONS & INPUTS
+   - Primary Button: Background var(--color-primary), Text #FFFFFF, Hover var(--color-primary-hover)
+   - Ghost / Secondary Button: Background transparent, Text var(--color-primary), Hover background rgba(255,255,255,0.05)
+   - Inputs: Background var(--color-bg-secondary), Border 1px solid var(--color-border), Padding 10px 14px, Radius var(--radius-md)
+
+E. MINI-OS KERNEL CONTROLS BAR
+   - Position: Floating centered top bar (z-index 150)
+   - Content: Live Uptime Ticks counter (`Ticks: X ms`), Execution status (Start/Pause), Single Step tick (+1 ms), Reset button, Back navigation arrow.
+
+--------------------------------------------------------------------------------
+4. FUTURE IMPLEMENTATION INSTRUCTIONS
+--------------------------------------------------------------------------------
+- When adding new modules or labs, adhere to the color coding:
+  * CPU & Scheduling: Cyan / Blue (#3B82F6)
+  * Memory & Paging: Violet / Purple (#8B5CF6)
+  * Storage & Disk: Emerald / Green (#10B981)
+  * Security & System Protection: Amber / Gold (#F59E0B)
+- Always use CSS variables from root for background, text, and border styling to maintain dark/light theme toggle compatibility.
+================================================================================

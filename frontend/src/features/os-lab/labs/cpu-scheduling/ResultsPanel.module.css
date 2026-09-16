@@ -1,0 +1,9 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+.metrics {
+  display: flex;
+  gap: var(--spacing-4);
+}

@@ -1,0 +1,95 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.headerRow h3 {
+  font-size: var(--font-md);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.presetButtons {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--spacing-4);
+  align-items: flex-end;
+  background-color: var(--color-bg-secondary);
+  padding: var(--spacing-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+@media (min-width: 640px) {
+  .formGrid {
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  }
+}
+
+.addBtnWrapper {
+  display: flex;
+  align-items: flex-end;
+}
+
+.addBtnWrapper button {
+  width: 100%;
+}
+
+.validationError {
+  background-color: rgba(239, 68, 68, 0.08);
+  border-left: 3px solid var(--color-error);
+  color: var(--color-error);
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--font-xs);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.tableWrapper {
+  margin-top: var(--spacing-2);
+}
+
+.pidCell {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-bold);
+  color: var(--color-primary);
+}
+
+.removeBtn {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: var(--spacing-1);
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-fast);
+}
+
+.removeBtn:hover {
+  color: var(--color-error);
+}
+
+.emptyState {
+  background-color: var(--color-bg-secondary);
+  border: 1px dashed var(--color-border);
+  padding: var(--spacing-6);
+  text-align: center;
+  border-radius: var(--radius-md);
+  font-size: var(--font-xs);
+  color: var(--color-text-secondary);
+}

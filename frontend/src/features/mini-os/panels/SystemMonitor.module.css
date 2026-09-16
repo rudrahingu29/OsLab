@@ -1,0 +1,76 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md, 8px);
+  overflow: hidden;
+}
+
+.header {
+  margin: 0;
+  padding: var(--spacing-3, 12px);
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.monitorContent {
+  flex-grow: 1;
+  padding: var(--spacing-3, 12px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4, 16px);
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1, 4px);
+}
+
+.label {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.value {
+  font-size: 0.8rem;
+  color: var(--color-text-primary);
+  font-weight: bold;
+  text-align: right;
+}
+
+.meterContainer {
+  height: 12px;
+  background-color: var(--color-bg-secondary);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.meterFill {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.ioList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2, 8px);
+  margin-top: var(--spacing-2, 8px);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--spacing-4, 16px);
+}
+
+.ioItem {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  padding: 8px 0;
+}

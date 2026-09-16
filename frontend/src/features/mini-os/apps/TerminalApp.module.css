@@ -1,0 +1,49 @@
+.terminalContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #05070c !important;
+  color: #34d399;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+  padding: var(--spacing-3, 12px);
+  box-sizing: border-box;
+}
+
+.output {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-bottom: var(--spacing-2, 8px);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.line {
+  white-space: pre-wrap;
+  line-height: 1.4;
+}
+
+.inputForm {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2, 8px);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: var(--spacing-2, 8px);
+}
+
+.prompt {
+  color: #60a5fa;
+  font-weight: bold;
+}
+
+.input {
+  background: transparent;
+  border: none;
+  color: #34d399;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+  flex-grow: 1;
+  outline: none;
+  padding: 0;
+}

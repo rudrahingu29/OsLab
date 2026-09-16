@@ -1,0 +1,84 @@
+.container {
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-5);
+  margin: var(--spacing-5) 0;
+}
+
+.title {
+  margin-top: 0;
+  margin-bottom: var(--spacing-2);
+  color: var(--color-text-primary);
+  font-size: var(--font-md);
+  font-weight: var(--weight-semibold);
+}
+
+.description {
+  color: var(--color-text-secondary);
+  font-size: var(--font-xs);
+  margin-bottom: var(--spacing-4);
+  line-height: var(--leading-normal);
+}
+
+.diagramArea {
+  display: flex;
+  background-color: var(--color-bg);
+  padding: var(--spacing-6);
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--color-border);
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
+}
+
+.blocks {
+  flex-direction: column;
+}
+
+.flowchart {
+  flex-direction: row;
+}
+
+.states {
+  flex-direction: row;
+}
+
+.elementWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-4);
+}
+
+.blocks .elementWrapper {
+  flex-direction: column;
+}
+
+.elementNode {
+  background-color: var(--color-surface);
+  border: 1.5px solid var(--color-primary);
+  color: var(--color-text-primary);
+  padding: var(--spacing-3) var(--spacing-6);
+  border-radius: var(--radius-md);
+  font-weight: var(--weight-medium);
+  font-size: var(--font-sm);
+  text-align: center;
+  min-width: 140px;
+  box-shadow: var(--shadow-sm);
+}
+
+.connector {
+  color: var(--color-text-muted);
+  font-size: var(--font-2xl);
+  font-weight: var(--weight-bold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.blocks .connector {
+  padding: var(--spacing-2) 0;
+}

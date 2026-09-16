@@ -1,0 +1,171 @@
+.desktop {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 64px); /* Subtract header height */
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at 50% 30%, #1e293b 0%, #0f172a 50%, #020617 100%);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.desktop::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.workArea {
+  flex-grow: 1;
+  display: flex;
+  position: relative;
+  padding: var(--spacing-4);
+  gap: var(--spacing-4);
+  box-sizing: border-box;
+  overflow: hidden;
+  height: calc(100% - 48px - 48px); /* Height minus controls and taskbar */
+}
+
+.shortcutGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 80px);
+  grid-template-rows: repeat(auto-fill, 80px);
+  gap: 16px;
+  grid-auto-flow: column;
+  z-index: 5;
+  width: auto;
+  max-width: 300px;
+  padding-top: 48px;
+}
+
+.learningPanelWrapper {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  height: calc(100% - 32px);
+  z-index: 80;
+  display: flex;
+  transition: opacity 0.2s ease;
+}
+
+/* Attached Square interactive toggle/resize button */
+.squareToggleBtn {
+  position: absolute;
+  left: -32px;
+  top: 8px;
+  width: 32px;
+  height: 34px;
+  border-radius: 8px 0 0 8px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-right: none;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: -3px 2px 8px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.2s, color 0.2s, transform 0.15s, border-color 0.2s;
+  z-index: 95;
+  padding: 0;
+}
+
+.squareToggleBtn:hover,
+.resizerActive .squareToggleBtn {
+  background-color: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+.squareToggleBtn:active {
+  transform: scale(0.95);
+}
+
+/* Vertical resizer drag handle along the edge */
+.resizerBar {
+  position: absolute;
+  left: -12px;
+  top: 0;
+  bottom: 0;
+  width: 12px;
+  cursor: col-resize;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 90;
+  user-select: none;
+  touch-action: none;
+}
+
+.resizerHandleGrip {
+  width: 4px;
+  height: 52px;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.25);
+  transition: all 0.2s ease;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.resizerBar:hover .resizerHandleGrip,
+.resizerActive .resizerHandleGrip {
+  background-color: var(--color-primary);
+  width: 5px;
+  height: 68px;
+  box-shadow: 0 0 10px var(--color-primary);
+}
+
+.learningPanel {
+  width: 100%;
+  height: 100%;
+  box-shadow: var(--shadow-2xl);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.showPanelFloatingBtn {
+  position: absolute;
+  top: 24px;
+  right: 0;
+  z-index: 85;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px 0 0 8px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-right: none;
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-xl);
+  backdrop-filter: blur(10px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+}
+
+.showPanelFloatingBtn:hover {
+  background-color: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+  transform: translateX(-3px);
+}
+
+@media (max-width: 992px) {
+  .learningPanelWrapper,
+  .showPanelFloatingBtn {
+    display: none;
+  }
+}

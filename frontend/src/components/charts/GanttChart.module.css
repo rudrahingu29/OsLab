@@ -1,0 +1,44 @@
+.container {
+  margin: var(--spacing-4) 0;
+  position: relative;
+}
+
+.chart {
+  height: 40px;
+  background-color: var(--color-bg-tertiary);
+  border-radius: var(--border-radius-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.block {
+  position: absolute;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 0.8rem;
+  border-right: 1px solid rgba(0,0,0,0.2);
+}
+
+.timeline {
+  position: relative;
+  height: 20px;
+  margin-top: 4px;
+}
+
+.tick {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.empty {
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: var(--spacing-4);
+  font-style: italic;
+}

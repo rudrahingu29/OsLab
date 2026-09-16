@@ -1,0 +1,152 @@
+:root {
+  /* Spacing Scale (8px system) */
+  --spacing-1: 0.25rem;  /* 4px */
+  --spacing-2: 0.5rem;   /* 8px */
+  --spacing-3: 0.75rem;  /* 12px */
+  --spacing-4: 1rem;     /* 16px */
+  --spacing-5: 1.25rem;  /* 20px */
+  --spacing-6: 1.5rem;   /* 24px */
+  --spacing-8: 2rem;     /* 32px */
+  --spacing-10: 2.5rem;  /* 40px */
+  --spacing-12: 3rem;     /* 48px */
+  --spacing-16: 4rem;     /* 64px */
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-pill: 9999px;
+
+  /* Font Families */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', Courier, monospace;
+
+  /* Font Sizes */
+  --font-xs: 0.75rem;
+  --font-sm: 0.875rem;
+  --font-md: 1rem;
+  --font-lg: 1.125rem;
+  --font-xl: 1.25rem;
+  --font-2xl: 1.5rem;
+  --font-3xl: 1.875rem;
+  --font-4xl: 2.25rem;
+
+  /* Font Weights */
+  --weight-light: 300;
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Line Heights */
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
+  /* Transitions */
+  --transition-fast: 120ms ease;
+  --transition-normal: 200ms ease;
+  --transition-slow: 300ms ease;
+
+  /* Shadows (Default) */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+
+  /* Z-Index Layers */
+  --z-nav: 100;
+  --z-dropdown: 200;
+  --z-drawer: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-tooltip: 600;
+}
+
+/* Default Theme (Dark Mode) */
+:root, [data-theme='dark'] {
+  --color-bg: #0B1120;
+  --color-bg-secondary: #111827;
+  --color-surface: #172033;
+  --color-surface-elevated: #1E293B;
+  --color-border: #2A3850;
+  
+  --color-text-primary: #F8FAFC;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #64748B;
+  
+  --color-primary: #22D3EE;
+  --color-primary-hover: #67E8F9;
+  --color-primary-active: #0891B2;
+  --color-primary-text: #0B1120;
+  
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3b82f6;
+
+  /* Backward Compatibility Mappings */
+  --color-bg-primary: var(--color-bg);
+  --color-bg-tertiary: var(--color-border);
+  --color-danger: var(--color-error);
+  --color-secondary: #8b5cf6;
+
+  --color-background: var(--color-bg);
+  --color-text: var(--color-text-primary);
+  
+  --border-radius-sm: var(--radius-sm);
+  --border-radius-md: var(--radius-md);
+  --border-radius-lg: var(--radius-lg);
+
+  --color-process-ready: var(--color-info);
+  --color-process-running: var(--color-success);
+  --color-process-blocked: var(--color-warning);
+  --color-process-terminated: var(--color-text-muted);
+}
+
+/* Refined Professional Light Theme */
+[data-theme='light'] {
+  --color-bg: #F6F8FB;
+  --color-bg-secondary: #EEF2F7;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #FFFFFF;
+  --color-border: #D9E1EA;
+  
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748B;
+  
+  --color-primary: #087F8C;
+  --color-primary-hover: #066A75;
+  --color-primary-active: #044F57;
+  --color-primary-text: #FFFFFF;
+  
+  --color-success: #15803D;
+  --color-warning: #B45309;
+  --color-error: #B91C1C;
+  --color-info: #0369A1;
+
+  /* Backward Compatibility Mappings */
+  --color-bg-primary: var(--color-bg);
+  --color-bg-tertiary: var(--color-border);
+  --color-danger: var(--color-error);
+  --color-secondary: #6B21A8;
+
+  --color-background: var(--color-bg);
+  --color-text: var(--color-text-primary);
+  
+  --border-radius-sm: var(--radius-sm);
+  --border-radius-md: var(--radius-md);
+  --border-radius-lg: var(--radius-lg);
+
+  --color-process-ready: var(--color-info);
+  --color-process-running: var(--color-success);
+  --color-process-blocked: var(--color-warning);
+  --color-process-terminated: var(--color-text-muted);
+
+  /* Light Theme Crisp Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.03);
+  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.07), 0 4px 6px -4px rgba(15, 23, 42, 0.03);
+}

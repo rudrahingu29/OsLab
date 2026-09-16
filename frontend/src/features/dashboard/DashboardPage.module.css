@@ -1,0 +1,263 @@
+.dashboardGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-6);
+}
+
+@media (min-width: 992px) {
+  .dashboardGrid {
+    grid-template-columns: 1fr 340px;
+  }
+}
+
+.mainCol, .sideCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+.sectionCard {
+  padding: var(--spacing-6);
+}
+
+.cardHeaderRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-3);
+}
+
+.headerInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.headerIcon {
+  color: var(--color-primary);
+}
+
+.headerInfo h2 {
+  font-size: var(--font-md);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.progressBadge {
+  font-size: var(--font-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--color-primary);
+  background-color: rgba(34, 211, 238, 0.08);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-pill);
+}
+
+.sectionDesc {
+  font-size: var(--font-sm);
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--spacing-4) 0;
+  line-height: var(--leading-normal);
+}
+
+.progressWrapper {
+  margin-bottom: var(--spacing-6);
+}
+
+.continueBox {
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  padding: var(--spacing-4);
+  border-radius: var(--radius-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
+}
+
+.continueSub {
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.continueTitle {
+  font-size: var(--font-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  margin-top: 2px;
+}
+
+.loadingBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-8);
+  color: var(--color-text-secondary);
+  font-size: var(--font-sm);
+}
+
+.expTableWrapper {
+  margin-top: var(--spacing-2);
+}
+
+.clickableRow {
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.expName {
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.algoTag {
+  font-size: var(--font-xs);
+  font-weight: var(--weight-medium);
+  background-color: var(--color-bg-secondary);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.dateText {
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+.actionCell {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.deleteBtn {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: var(--spacing-1);
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-fast);
+}
+
+.deleteBtn:hover {
+  color: var(--color-error);
+}
+
+.emptyExpState {
+  text-align: center;
+  padding: var(--spacing-8) var(--spacing-4);
+  background-color: var(--color-bg-secondary);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  margin-top: var(--spacing-2);
+}
+
+.emptyIcon {
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-2);
+}
+
+.emptyExpState h3 {
+  font-size: var(--font-sm);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-1) 0;
+}
+
+.emptyExpState p {
+  font-size: var(--font-xs);
+  color: var(--color-text-secondary);
+  margin: 0;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.sideHeader {
+  font-size: var(--font-sm);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-4) 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.quickStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.quickTile {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-4);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.quickTile:hover {
+  transform: translateX(4px);
+  border-color: var(--color-primary);
+}
+
+.tileIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tileInfo {
+  flex-grow: 1;
+}
+
+.tileTitle {
+  font-size: var(--font-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.tileDesc {
+  font-size: 10px;
+  color: var(--color-text-muted);
+}
+
+.tileArrow {
+  color: var(--color-text-muted);
+  transition: color var(--transition-fast);
+}
+
+.quickTile:hover .tileArrow {
+  color: var(--color-primary);
+}
+
+.algoList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.algoItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  font-size: var(--font-xs);
+  color: var(--color-text-secondary);
+  font-weight: var(--weight-medium);
+}
+
+.checkIcon {
+  color: var(--color-success);
+  flex-shrink: 0;
+}

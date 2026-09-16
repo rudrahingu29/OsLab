@@ -1,0 +1,36 @@
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--spacing-10) var(--spacing-6);
+  background-color: rgba(239, 68, 68, 0.03);
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  border-radius: var(--radius-lg);
+  max-width: 480px;
+  margin: var(--spacing-6) auto;
+}
+
+.icon {
+  font-size: 2rem;
+  margin-bottom: var(--spacing-4);
+}
+
+.title {
+  font-size: var(--font-lg);
+  font-weight: var(--weight-semibold);
+  color: var(--color-error);
+  margin-bottom: var(--spacing-2);
+}
+
+.message {
+  font-size: var(--font-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-6);
+  line-height: var(--leading-normal);
+}
+
+.retryBtn {
+  margin-top: var(--spacing-2);
+}

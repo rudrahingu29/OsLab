@@ -1,0 +1,22 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.label {
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.select {
+  padding: var(--spacing-2);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-bg-tertiary);
+  outline: none;
+}
+.select:focus {
+  border-color: var(--color-primary);
+}

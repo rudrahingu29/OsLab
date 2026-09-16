@@ -1,0 +1,222 @@
+.pageWrapper {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  background-color: var(--color-bg);
+  align-items: stretch;
+}
+
+.splitGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+}
+
+@media (min-width: 992px) {
+  .splitGrid {
+    grid-template-columns: 1.1fr 0.9fr;
+  }
+}
+
+/* Left side panel */
+.infoPanel {
+  display: none;
+  background-color: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border);
+  padding: var(--spacing-16) var(--spacing-12);
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 992px) {
+  .infoPanel {
+    display: flex;
+  }
+}
+
+.infoContent {
+  max-width: 480px;
+}
+
+.brandTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: var(--font-xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-8);
+}
+
+.brandIcon {
+  color: var(--color-primary);
+}
+
+.brandAccent {
+  color: var(--color-primary);
+}
+
+.panelHeading {
+  font-size: var(--font-3xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-4);
+}
+
+.panelSub {
+  font-size: var(--font-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+  margin-bottom: var(--spacing-8);
+}
+
+.terminalBox {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.terminalHeader {
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--spacing-3) var(--spacing-4);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-border);
+  display: inline-block;
+}
+
+.terminalTitle {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  margin-left: auto;
+}
+
+.terminalBody {
+  padding: var(--spacing-4);
+  font-family: var(--font-mono);
+  font-size: var(--font-xs);
+  line-height: var(--leading-relaxed);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.greenText {
+  color: var(--color-success);
+}
+
+.mutedText {
+  color: var(--color-text-muted);
+}
+
+.cyanText {
+  color: var(--color-primary);
+}
+
+/* Right side form panel */
+.formPanel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-8) var(--spacing-6);
+}
+
+.formContainer {
+  width: 100%;
+  max-width: 380px;
+}
+
+.mobileBrand {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: var(--font-lg);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-8);
+}
+
+@media (min-width: 992px) {
+  .mobileBrand {
+    display: none;
+  }
+}
+
+.formHeader {
+  margin-bottom: var(--spacing-8);
+}
+
+.formTitle {
+  font-size: var(--font-2xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-1);
+}
+
+.formSubtitle {
+  font-size: var(--font-sm);
+  color: var(--color-text-secondary);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-5);
+}
+
+.passwordWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 36px;
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: var(--spacing-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-fast);
+}
+
+.passwordToggle:hover {
+  color: var(--color-text-primary);
+}
+
+.submitBtn {
+  margin-top: var(--spacing-2);
+  height: 42px;
+}
+
+.footerText {
+  font-size: var(--font-sm);
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin-top: var(--spacing-6);
+}
+
+.signupLink {
+  color: var(--color-primary);
+  font-weight: var(--weight-semibold);
+  transition: color var(--transition-fast);
+}
+
+.signupLink:hover {
+  color: var(--color-primary-hover);
+}
