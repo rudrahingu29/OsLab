@@ -22,12 +22,20 @@ export const getMe = asyncHandler(async (req: AuthRequest, res: Response) => {
   if (!user) {
     throw new ApiError(404, 'User not found');
   }
-  res.json(user);
+  const role = user.role || (user.email?.toLowerCase().includes('admin') ? 'admin' : 'student');
+  res.json({
+    _id: user._id,
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    role,
+    status: user.status || 'active',
+    createdAt: user.createdAt,
+  });
 });
 
-export const logout = asyncHandler(async (req: Request, res: Response) => {
+export const logout = asyncHandler(async (_req: Request, res: Response) => {
   res.json({
     message: 'Logged out successfully. Please clear your authentication token on the client.',
   });
 });
-
