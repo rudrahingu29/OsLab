@@ -57,20 +57,29 @@ export const AdminPage: React.FC = () => {
         adminService.getAnnouncements(),
       ]);
 
-      if (usersRes.status === 'fulfilled' && Array.isArray(usersRes.value)) {
-        setUsers(usersRes.value);
+      if (usersRes.status === 'fulfilled') {
+        const uList = Array.isArray(usersRes.value) ? usersRes.value : (usersRes.value as any)?.data || [];
+        setUsers(Array.isArray(uList) ? uList : []);
+      } else {
+        const status = (usersRes.reason as any)?.response?.status;
+        if (status === 401 || status === 403) {
+          addToast('Admin session permission notice: Please log out and log back in to refresh your admin token.', 'warning');
+        }
       }
 
-      if (questionsRes.status === 'fulfilled' && Array.isArray(questionsRes.value)) {
-        setQuestions(questionsRes.value);
+      if (questionsRes.status === 'fulfilled') {
+        const qList = Array.isArray(questionsRes.value) ? questionsRes.value : (questionsRes.value as any)?.data || [];
+        setQuestions(Array.isArray(qList) ? qList : []);
       }
 
-      if (labsRes.status === 'fulfilled' && labsRes.value?.simStats) {
-        setSimStats(labsRes.value.simStats);
+      if (labsRes.status === 'fulfilled') {
+        const val = labsRes.value;
+        if (val?.simStats) setSimStats(val.simStats);
       }
 
-      if (annRes.status === 'fulfilled' && Array.isArray(annRes.value)) {
-        setAnnouncements(annRes.value);
+      if (annRes.status === 'fulfilled') {
+        const aList = Array.isArray(annRes.value) ? annRes.value : (annRes.value as any)?.data || [];
+        setAnnouncements(Array.isArray(aList) ? aList : []);
       }
     } catch (_e) {
       addToast('Failed to fetch live database records.', 'error');

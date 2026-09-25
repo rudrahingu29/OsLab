@@ -28,27 +28,28 @@ export interface LabTelemetryResponse {
 export const adminService = {
   getStats: async (): Promise<AdminStatsResponse> => {
     const res = await api.get('/admin/stats');
-    return res.data.data;
+    return res.data?.data || res.data;
   },
 
   getUsers: async (search?: string, role?: string): Promise<AdminUser[]> => {
     const res = await api.get('/admin/users', { params: { search, role } });
-    return res.data.data;
+    const users = res.data?.data !== undefined ? res.data.data : res.data;
+    return Array.isArray(users) ? users : [];
   },
 
   createUser: async (data: { name: string; email: string; role: UserRole; status?: 'active' | 'suspended' }): Promise<AdminUser> => {
     const res = await api.post('/admin/users', data);
-    return res.data.data;
+    return res.data?.data || res.data;
   },
 
   updateUserRole: async (userId: string, role: UserRole) => {
     const res = await api.patch(`/admin/users/${userId}/role`, { role });
-    return res.data.data;
+    return res.data?.data || res.data;
   },
 
   updateUserStatus: async (userId: string, status?: 'active' | 'suspended') => {
     const res = await api.patch(`/admin/users/${userId}/status`, { status });
-    return res.data.data;
+    return res.data?.data || res.data;
   },
 
   resetUserProgress: async (userId: string) => {
@@ -63,12 +64,13 @@ export const adminService = {
 
   getQuestions: async (): Promise<AdminQuestion[]> => {
     const res = await api.get('/admin/quizzes/questions');
-    return res.data.data;
+    const questions = res.data?.data !== undefined ? res.data.data : res.data;
+    return Array.isArray(questions) ? questions : [];
   },
 
   createQuestion: async (data: Omit<AdminQuestion, 'id' | 'successRate'>): Promise<AdminQuestion> => {
     const res = await api.post('/admin/quizzes/questions', data);
-    return res.data.data;
+    return res.data?.data || res.data;
   },
 
   deleteQuestion: async (id: string) => {
@@ -78,22 +80,23 @@ export const adminService = {
 
   getLabTelemetry: async (): Promise<LabTelemetryResponse> => {
     const res = await api.get('/admin/labs/stats');
-    return res.data.data;
+    return res.data?.data || res.data;
   },
 
   getAnnouncements: async (): Promise<AdminAnnouncement[]> => {
     const res = await api.get('/admin/announcements');
-    return res.data.data;
+    const announcements = res.data?.data !== undefined ? res.data.data : res.data;
+    return Array.isArray(announcements) ? announcements : [];
   },
 
   createAnnouncement: async (data: Omit<AdminAnnouncement, 'id' | 'createdAt'>): Promise<AdminAnnouncement> => {
     const res = await api.post('/admin/announcements', data);
-    return res.data.data;
+    return res.data?.data || res.data;
   },
 
   toggleAnnouncement: async (id: string) => {
     const res = await api.patch(`/admin/announcements/${id}/toggle`);
-    return res.data.data;
+    return res.data?.data || res.data;
   },
 
   deleteAnnouncement: async (id: string) => {
