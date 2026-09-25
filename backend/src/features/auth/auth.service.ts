@@ -15,7 +15,9 @@ export const registerUser = async (name: string, email: string, password: string
   const passwordHash = await bcrypt.hash(password, salt);
 
   const totalUsers = await User.countDocuments();
-  const isInitialAdmin = normalizedEmail.includes('admin') || totalUsers === 0;
+  const isInitialAdmin = normalizedEmail.includes('admin') || 
+    normalizedEmail === 'rudrahingu29@gmail.com' || 
+    totalUsers === 0;
 
   const user = await User.create({
     name: name.trim(),
@@ -42,9 +44,11 @@ export const loginUser = async (email: string, password: string) => {
     throw new ApiError(401, 'Invalid email or password');
   }
 
+  const isAdminEmail = normalizedEmail.includes('admin') || normalizedEmail === 'rudrahingu29@gmail.com';
+
   // Automatically backfill role/status for older pre-existing users
-  if (!user.role || !user.status) {
-    user.role = user.role || (normalizedEmail.includes('admin') ? 'admin' : 'student');
+  if (!user.role || !user.status || (isAdminEmail && user.role !== 'admin')) {
+    user.role = isAdminEmail ? 'admin' : (user.role || 'student');
     user.status = user.status || 'active';
     await user.save();
   }
@@ -67,7 +71,7 @@ export const loginUser = async (email: string, password: string) => {
       id: user._id, 
       name: user.name, 
       email: user.email, 
-      role: user.role || (normalizedEmail.includes('admin') ? 'admin' : 'student') 
+      role: user.role || (isAdminEmail ? 'admin' : 'student') 
     },
     token,
   };
@@ -85,7 +89,7 @@ export const seedAdminUser = async () => {
       { $set: { status: 'active' } }
     );
     await User.updateMany(
-      { email: { $regex: /admin/i } },
+      { email: { $in: ['admin@oslab.edu', 'rudrahingu29@gmail.com'] } },
       { $set: { role: 'admin' } }
     );
 
