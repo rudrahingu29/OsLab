@@ -2,19 +2,20 @@ import app from './app';
 import { connectDB, disconnectDB } from './config/database';
 import { env } from './config/env';
 import { seedQuizzes } from './features/quiz/quiz.seed';
+import { seedAdminUser } from './features/auth/auth.service';
 
 const startServer = async () => {
   await connectDB();
 
-  // Asynchronous, idempotent, non-blocking quiz question seeding
-  seedQuizzes()
-    .then(({ inserted, updated }) => {
-      if (inserted > 0 || updated > 0) {
-        console.log(`[OSLab API] Quiz questions initialized/updated. Inserted: ${inserted}, Updated: ${updated}`);
+  // Asynchronous, idempotent seeding
+  Promise.all([seedQuizzes(), seedAdminUser()])
+    .then(([quizRes]) => {
+      if (quizRes && (quizRes.inserted > 0 || quizRes.updated > 0)) {
+        console.log(`[OSLab API] Quiz questions initialized/updated. Inserted: ${quizRes.inserted}, Updated: ${quizRes.updated}`);
       }
     })
     .catch((err) => {
-      console.warn('[OSLab API] Non-fatal background quiz seeding notice:', err.message);
+      console.warn('[OSLab API] Non-fatal background seeding notice:', err.message);
     });
 
   const server = app.listen(env.PORT, () => {
