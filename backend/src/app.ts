@@ -14,6 +14,7 @@ import simulationRoutes from './features/simulation/simulation.routes';
 import quizRoutes from './features/quiz/quiz.routes';
 import dashboardRoutes from './features/dashboard/dashboard.routes';
 import miniOsRoutes from './features/mini-os/mini-os.routes';
+import adminRoutes from './features/admin/admin.routes';
 
 const app = express();
 
@@ -83,6 +84,7 @@ app.use('/api/simulations', apiLimiter, simulationRoutes);
 app.use('/api/quizzes', apiLimiter, quizRoutes);
 app.use('/api/dashboard', apiLimiter, dashboardRoutes);
 app.use('/api/mini-os', apiLimiter, miniOsRoutes);
+app.use('/api/admin', apiLimiter, adminRoutes);
 
 // 404 Route Handler for API & Unknown Routes
 app.use((req, res) => {

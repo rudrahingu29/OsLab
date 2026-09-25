@@ -5,6 +5,7 @@ interface User {
   id: string;
   name: string;
   email: string;
+  role?: string;
 }
 
 interface AuthContextType {
@@ -37,7 +38,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           const userData = {
             id: response.data._id || response.data.id,
             name: response.data.name,
-            email: response.data.email
+            email: response.data.email,
+            role: response.data.role || JSON.parse(savedUser).role || 'student'
           };
           setUser(userData);
           localStorage.setItem('oslab_user', JSON.stringify(userData));

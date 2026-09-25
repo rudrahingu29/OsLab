@@ -17,6 +17,7 @@ const TopicPage = lazy(() => import('../features/learn/pages/TopicPage'));
 const QuizPage = lazy(() => import('../features/quiz/pages/QuizPage'));
 const MiniOSPage = lazy(() => import('../features/mini-os/pages/MiniOSPage'));
 const ProfilePage = lazy(() => import('../features/profile/ProfilePage'));
+const AdminPage = lazy(() => import('../features/admin/AdminPage'));
 const NotFoundPage = lazy(() => import('../features/not-found/NotFoundPage'));
 
 
@@ -89,6 +90,10 @@ const router = createBrowserRouter([
       {
         path: 'os-lab/disk-scheduling',
         element: <ProtectedRoute><DiskSchedulingLab /></ProtectedRoute>
+      },
+      {
+        path: 'admin',
+        element: <ProtectedRoute><AdminPage /></ProtectedRoute>
       },
       {
         path: '*',

@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../features/auth/context/AuthContext';
 import { useUIStore } from '../../stores/uiStore';
-import { Sun, Moon, Menu, X, ChevronDown, LogOut, User as UserIcon } from 'lucide-react';
+import { Sun, Moon, Menu, X, ChevronDown, LogOut, User as UserIcon, ShieldCheck } from 'lucide-react';
 import styles from './Header.module.css';
 
 const Header: React.FC = () => {
@@ -11,7 +11,9 @@ const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
   const navigate = useNavigate();
+  const isAdminPage = location.pathname.startsWith('/admin');
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -76,7 +78,10 @@ const Header: React.FC = () => {
           aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
           title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
         >
-          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+          <div className={styles.iconWrapper}>
+            <Sun className={`${styles.themeIcon} ${styles.sunIcon} ${theme === 'dark' ? styles.active : styles.inactive}`} size={20} />
+            <Moon className={`${styles.themeIcon} ${styles.moonIcon} ${theme === 'light' ? styles.active : styles.inactive}`} size={20} />
+          </div>
         </button>
 
         {user ? (
@@ -106,6 +111,14 @@ const Header: React.FC = () => {
                   <UserIcon size={16} />
                   <span>My Profile</span>
                 </Link>
+                <Link 
+                  to="/admin" 
+                  className={styles.dropdownItem}
+                  onClick={() => setDropdownOpen(false)}
+                >
+                  <ShieldCheck size={16} />
+                  <span>Admin Console</span>
+                </Link>
                 <hr className={styles.divider} />
                 <button onClick={handleLogout} className={styles.dropdownItemDanger}>
                   <LogOut size={16} />
@@ -113,6 +126,25 @@ const Header: React.FC = () => {
                 </button>
               </div>
             )}
+          </div>
+        ) : isAdminPage ? (
+          <div className={styles.guestLinks}>
+            <button 
+              onClick={handleLogout} 
+              className={styles.registerBtn}
+              style={{ 
+                background: 'var(--color-surface-elevated)', 
+                color: 'var(--color-text-primary)', 
+                border: '1px solid var(--color-border)', 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: '6px',
+                cursor: 'pointer'
+              }}
+            >
+              <LogOut size={14} />
+              <span>Logout / Exit</span>
+            </button>
           </div>
         ) : (
           <div className={styles.guestLinks}>
