@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import * as adminController from './admin.controller';
-import { authenticate } from '../../middleware/auth';
+import { authenticate, authorizeAdmin } from '../../middleware/auth';
 
 const router = Router();
 
-// Protect all admin endpoints with authentication
-router.use(authenticate);
+// Protect all admin endpoints with authentication & admin role check
+router.use(authenticate, authorizeAdmin);
 
 // Platform & telemetry stats
 router.get('/stats', adminController.getStats);

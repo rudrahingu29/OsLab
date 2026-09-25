@@ -2,6 +2,7 @@ import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import MainLayout from '../components/layout/MainLayout';
 import ProtectedRoute from '../features/auth/components/ProtectedRoute';
+import AdminRoute from '../features/auth/components/AdminRoute';
 
 const LandingPage = lazy(() => import('../features/landing/LandingPage'));
 const LoginPage = lazy(() => import('../features/auth/pages/LoginPage'));
@@ -93,7 +94,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'admin',
-        element: <ProtectedRoute><AdminPage /></ProtectedRoute>
+        element: <AdminRoute><AdminPage /></AdminRoute>
       },
       {
         path: '*',

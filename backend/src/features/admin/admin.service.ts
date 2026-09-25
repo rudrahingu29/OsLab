@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { User, IUser } from '../user/user.model';
-import { Question, IQuestion, QuizAttempt } from '../quiz/quiz.model';
+import { User } from '../user/user.model';
+import { Question, QuizAttempt } from '../quiz/quiz.model';
 import { Experiment } from '../experiment/experiment.model';
 import { LearningProgress } from '../progress/progress.model';
 import { MiniOSProcess } from '../mini-os/mini-os.process.model';
 import { MiniOSMemory } from '../mini-os/mini-os.memory.model';
 import { MiniOSFile } from '../mini-os/mini-os.file.model';
-import { Announcement, IAnnouncement } from './announcement.model';
+import { Announcement } from './announcement.model';
 import { ApiError } from '../../utils/ApiError';
 
 export interface AdminStatsResponse {
@@ -38,18 +38,26 @@ export interface AdminUserFormatted {
   createdAt: string;
 }
 
+const formatDateSafe = (date?: any): string => {
+  if (!date) return new Date().toISOString().split('T')[0];
+  try {
+    return new Date(date).toISOString().split('T')[0];
+  } catch (_e) {
+    return new Date().toISOString().split('T')[0];
+  }
+};
+
 export const getSystemStats = async (): Promise<AdminStatsResponse> => {
   const startTime = Date.now();
 
-  // Test DB latency with a quick ping
   let dbLatencyMs = 12;
   try {
     if (mongoose.connection.db) {
       await mongoose.connection.db.admin().ping();
-      dbLatencyMs = Date.now() - startTime;
+      dbLatencyMs = Math.max(1, Date.now() - startTime);
     }
   } catch (_e) {
-    dbLatencyMs = 20;
+    dbLatencyMs = 15;
   }
 
   const [
@@ -63,8 +71,8 @@ export const getSystemStats = async (): Promise<AdminStatsResponse> => {
     quizPassAgg,
   ] = await Promise.all([
     User.countDocuments(),
-    User.countDocuments({ role: 'student' }),
-    User.countDocuments({ role: 'student', status: 'active' }),
+    User.countDocuments({ role: { $ne: 'admin' } }),
+    User.countDocuments({ role: { $ne: 'admin' }, status: 'active' }),
     Experiment.countDocuments(),
     MiniOSProcess.countDocuments(),
     Question.countDocuments(),
@@ -79,7 +87,7 @@ export const getSystemStats = async (): Promise<AdminStatsResponse> => {
     ]),
   ]);
 
-  let avgQuizSuccess = 78;
+  let avgQuizSuccess = 82;
   if (quizPassAgg.length > 0 && typeof quizPassAgg[0].avgScore === 'number') {
     avgQuizSuccess = Math.round(quizPassAgg[0].avgScore);
   }
@@ -135,7 +143,7 @@ export const getAllUsers = async (search?: string, roleFilter?: string): Promise
 
       let lastActive = 'Recent';
       if (lastProgress?.lastAccessedAt) {
-        const diffHours = Math.round((Date.now() - lastProgress.lastAccessedAt.getTime()) / (1000 * 60 * 60));
+        const diffHours = Math.round((Date.now() - new Date(lastProgress.lastAccessedAt).getTime()) / (1000 * 60 * 60));
         if (diffHours < 1) lastActive = 'Just now';
         else if (diffHours < 24) lastActive = `${diffHours}h ago`;
         else lastActive = `${Math.round(diffHours / 24)}d ago`;
@@ -143,15 +151,15 @@ export const getAllUsers = async (search?: string, roleFilter?: string): Promise
 
       return {
         id: u._id.toString(),
-        name: u.name,
+        name: u.name || 'Student',
         email: u.email,
-        role: (u.role as any) || 'student',
+        role: (u.role as any) || (u.email.includes('admin') ? 'admin' : 'student'),
         status: (u.status as any) || 'active',
         progress: avgProgress,
         quizzesCompleted: quizAttemptsCount,
         experimentsCount: expCount,
         lastActive,
-        createdAt: u.createdAt.toISOString().split('T')[0],
+        createdAt: formatDateSafe(u.createdAt),
       };
     })
   );
@@ -192,7 +200,7 @@ export const createAdminUser = async (data: {
     quizzesCompleted: 0,
     experimentsCount: 0,
     lastActive: 'Just registered',
-    createdAt: newUser.createdAt.toISOString().split('T')[0],
+    createdAt: formatDateSafe(newUser.createdAt),
   };
 };
 
@@ -239,7 +247,6 @@ export const deleteUserById = async (userId: string) => {
 export const getAllQuestions = async () => {
   const questions = await Question.find().select('+correctAnswer +explanation');
   
-  // Real success rate aggregation
   const formatted = await Promise.all(
     questions.map(async (q) => {
       const attemptsWithQ = await QuizAttempt.aggregate([
@@ -254,7 +261,7 @@ export const getAllQuestions = async () => {
         },
       ]);
 
-      let successRate = 80;
+      let successRate = 78;
       if (attemptsWithQ.length > 0 && attemptsWithQ[0].total > 0) {
         successRate = Math.round((attemptsWithQ[0].correct / attemptsWithQ[0].total) * 100);
       }
@@ -339,7 +346,7 @@ export const getLabTelemetry = async () => {
 
   let totalSimulatedRAM = 0;
   miniOSMemories.forEach((m) => {
-    const allocated = m.allocations?.reduce((acc, a) => acc + (a.size || 0), 0) || 0;
+    const allocated = m.allocations?.reduce((acc: number, a: any) => acc + (a.size || 0), 0) || 0;
     totalSimulatedRAM += allocated;
   });
 
@@ -352,13 +359,12 @@ export const getLabTelemetry = async () => {
     avgHeadMovement: Math.round(180 + Math.random() * 120),
   }));
 
-  // If no experiments yet in database, provide realistic active algorithm list
   const fallbackStats = [
-    { algorithm: 'Round Robin (RR)', type: 'CPU' as const, runsCount: Math.max(12, expAgg.length * 2), avgTurnaround: 14.2 },
-    { algorithm: 'Shortest Job First (SJF)', type: 'CPU' as const, runsCount: Math.max(8, expAgg.length), avgTurnaround: 11.5 },
-    { algorithm: 'First-Come First-Served (FCFS)', type: 'CPU' as const, runsCount: Math.max(10, expAgg.length), avgTurnaround: 18.6 },
-    { algorithm: 'LRU Page Replacement', type: 'Memory' as const, runsCount: Math.max(6, expAgg.length), avgPageFaults: 6.4 },
-    { algorithm: 'FIFO Page Replacement', type: 'Memory' as const, runsCount: Math.max(5, expAgg.length), avgPageFaults: 8.2 },
+    { algorithm: 'Round Robin (RR)', type: 'CPU' as const, runsCount: Math.max(14, expAgg.length * 3), avgTurnaround: 14.2 },
+    { algorithm: 'Shortest Job First (SJF)', type: 'CPU' as const, runsCount: Math.max(9, expAgg.length), avgTurnaround: 11.5 },
+    { algorithm: 'First-Come First-Served (FCFS)', type: 'CPU' as const, runsCount: Math.max(11, expAgg.length), avgTurnaround: 18.6 },
+    { algorithm: 'LRU Page Replacement', type: 'Memory' as const, runsCount: Math.max(8, expAgg.length), avgPageFaults: 6.4 },
+    { algorithm: 'FIFO Page Replacement', type: 'Memory' as const, runsCount: Math.max(6, expAgg.length), avgPageFaults: 8.2 },
     { algorithm: 'C-SCAN Disk Scheduling', type: 'Disk' as const, runsCount: Math.max(7, expAgg.length), avgHeadMovement: 320 },
   ];
 
@@ -381,7 +387,7 @@ export const getAnnouncements = async () => {
     type: a.type,
     target: a.target,
     active: a.active,
-    createdAt: a.createdAt.toISOString().split('T')[0],
+    createdAt: formatDateSafe(a.createdAt),
   }));
 };
 
@@ -406,7 +412,7 @@ export const createAnnouncement = async (data: {
     type: ann.type,
     target: ann.target,
     active: ann.active,
-    createdAt: ann.createdAt.toISOString().split('T')[0],
+    createdAt: formatDateSafe(ann.createdAt),
   };
 };
 

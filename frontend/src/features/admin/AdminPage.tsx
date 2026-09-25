@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PageHeader, Button } from '../../components/common';
+import { PageHeader, Button, Spinner } from '../../components/common';
 import { useAuth } from '../auth/context/AuthContext';
 import { useUIStore } from '../../stores/uiStore';
 import { 
@@ -13,12 +13,6 @@ import {
   LogOut,
   RefreshCw
 } from 'lucide-react';
-import {
-  INITIAL_USERS,
-  INITIAL_QUESTIONS,
-  INITIAL_ANNOUNCEMENTS,
-  SIMULATION_STATS,
-} from './mockData';
 import type { AdminUser, AdminQuestion, AdminAnnouncement, SimulationStat, UserRole } from './types';
 import adminService from '../../services/adminService';
 import AdminOverview from './components/AdminOverview';
@@ -31,29 +25,27 @@ import styles from './AdminPage.module.css';
 
 export const AdminPage: React.FC = () => {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const { addToast } = useUIStore();
   const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'quizzes' | 'labs' | 'broadcasts' | 'terminal'>('overview');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const [users, setUsers] = useState<AdminUser[]>(() => {
-    const saved = localStorage.getItem('oslab_admin_users');
-    return saved ? JSON.parse(saved) : INITIAL_USERS;
-  });
+  // Live real data states (no hardcoded fake users)
+  const [users, setUsers] = useState<AdminUser[]>([]);
+  const [questions, setQuestions] = useState<AdminQuestion[]>([]);
+  const [announcements, setAnnouncements] = useState<AdminAnnouncement[]>([]);
+  const [simStats, setSimStats] = useState<SimulationStat[]>([]);
 
-  const [questions, setQuestions] = useState<AdminQuestion[]>(() => {
-    const saved = localStorage.getItem('oslab_admin_questions');
-    return saved ? JSON.parse(saved) : INITIAL_QUESTIONS;
-  });
+  // Check admin role
+  useEffect(() => {
+    const isAdmin = user?.role === 'admin' || user?.email?.toLowerCase().includes('admin');
+    if (user && !isAdmin) {
+      addToast('Access denied: Admin privileges required.', 'error');
+      navigate('/dashboard', { replace: true });
+    }
+  }, [user, navigate, addToast]);
 
-  const [announcements, setAnnouncements] = useState<AdminAnnouncement[]>(() => {
-    const saved = localStorage.getItem('oslab_admin_announcements');
-    return saved ? JSON.parse(saved) : INITIAL_ANNOUNCEMENTS;
-  });
-
-  const [simStats, setSimStats] = useState<SimulationStat[]>(SIMULATION_STATS);
-
-  // Fetch real data from backend
+  // Fetch real database records from backend
   const fetchAllData = useCallback(async () => {
     setLoading(true);
     try {
@@ -65,47 +57,31 @@ export const AdminPage: React.FC = () => {
         adminService.getAnnouncements(),
       ]);
 
-      if (usersRes.status === 'fulfilled' && usersRes.value && usersRes.value.length > 0) {
+      if (usersRes.status === 'fulfilled' && Array.isArray(usersRes.value)) {
         setUsers(usersRes.value);
-        localStorage.setItem('oslab_admin_users', JSON.stringify(usersRes.value));
       }
 
-      if (questionsRes.status === 'fulfilled' && questionsRes.value && questionsRes.value.length > 0) {
+      if (questionsRes.status === 'fulfilled' && Array.isArray(questionsRes.value)) {
         setQuestions(questionsRes.value);
-        localStorage.setItem('oslab_admin_questions', JSON.stringify(questionsRes.value));
       }
 
-      if (labsRes.status === 'fulfilled' && labsRes.value && labsRes.value.simStats?.length > 0) {
+      if (labsRes.status === 'fulfilled' && labsRes.value?.simStats) {
         setSimStats(labsRes.value.simStats);
       }
 
-      if (annRes.status === 'fulfilled' && annRes.value && annRes.value.length > 0) {
+      if (annRes.status === 'fulfilled' && Array.isArray(annRes.value)) {
         setAnnouncements(annRes.value);
-        localStorage.setItem('oslab_admin_announcements', JSON.stringify(annRes.value));
       }
     } catch (_e) {
-      // Fall back to local cached state
+      addToast('Failed to fetch live database records.', 'error');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [addToast]);
 
   useEffect(() => {
     fetchAllData();
   }, [fetchAllData]);
-
-  // Sync state to local storage as fallback cache
-  useEffect(() => {
-    localStorage.setItem('oslab_admin_users', JSON.stringify(users));
-  }, [users]);
-
-  useEffect(() => {
-    localStorage.setItem('oslab_admin_questions', JSON.stringify(questions));
-  }, [questions]);
-
-  useEffect(() => {
-    localStorage.setItem('oslab_admin_announcements', JSON.stringify(announcements));
-  }, [announcements]);
 
   const handleLogout = () => {
     logout();
@@ -113,17 +89,17 @@ export const AdminPage: React.FC = () => {
     navigate('/login');
   };
 
-  // User Actions
+  // User Actions - Real Backend Integration
   const handleUpdateRole = async (userId: string, newRole: UserRole) => {
     try {
       await adminService.updateUserRole(userId, newRole);
-    } catch (_e) {
-      // Offline fallback
+      setUsers((prev) =>
+        prev.map((u) => (u.id === userId ? { ...u, role: newRole } : u))
+      );
+      addToast(`User role updated to ${newRole}.`, 'success');
+    } catch (err: any) {
+      addToast(err.response?.data?.message || 'Failed to update user role.', 'error');
     }
-    setUsers((prev) =>
-      prev.map((u) => (u.id === userId ? { ...u, role: newRole } : u))
-    );
-    addToast(`User role updated to ${newRole}.`, 'success');
   };
 
   const handleToggleStatus = async (userId: string) => {
@@ -131,37 +107,37 @@ export const AdminPage: React.FC = () => {
     const newStatus = target?.status === 'active' ? 'suspended' : 'active';
     try {
       await adminService.updateUserStatus(userId, newStatus);
-    } catch (_e) {
-      // Offline fallback
+      setUsers((prev) =>
+        prev.map((u) => (u.id === userId ? { ...u, status: newStatus } : u))
+      );
+      addToast(`User account ${newStatus}.`, newStatus === 'active' ? 'success' : 'info');
+    } catch (err: any) {
+      addToast(err.response?.data?.message || 'Failed to update user status.', 'error');
     }
-    setUsers((prev) =>
-      prev.map((u) => (u.id === userId ? { ...u, status: newStatus } : u))
-    );
-    addToast(`User account ${newStatus}.`, newStatus === 'active' ? 'success' : 'info');
   };
 
   const handleResetProgress = async (userId: string) => {
     try {
       await adminService.resetUserProgress(userId);
-    } catch (_e) {
-      // Offline fallback
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.id === userId ? { ...u, progress: 0, quizzesCompleted: 0, experimentsCount: 0 } : u
+        )
+      );
+      addToast('User learning progress and experiments reset.', 'info');
+    } catch (err: any) {
+      addToast(err.response?.data?.message || 'Failed to reset progress.', 'error');
     }
-    setUsers((prev) =>
-      prev.map((u) =>
-        u.id === userId ? { ...u, progress: 0, quizzesCompleted: 0, experimentsCount: 0 } : u
-      )
-    );
-    addToast('User learning progress and experiments reset.', 'info');
   };
 
   const handleDeleteUser = async (userId: string) => {
     try {
       await adminService.deleteUser(userId);
-    } catch (_e) {
-      // Offline fallback
+      setUsers((prev) => prev.filter((u) => u.id !== userId));
+      addToast('User record deleted from database.', 'info');
+    } catch (err: any) {
+      addToast(err.response?.data?.message || 'Failed to delete user.', 'error');
     }
-    setUsers((prev) => prev.filter((u) => u.id !== userId));
-    addToast('User record deleted from database.', 'info');
   };
 
   const handleAddUser = async (newUserData: Omit<AdminUser, 'id' | 'createdAt' | 'lastActive' | 'progress' | 'quizzesCompleted' | 'experimentsCount'>) => {
@@ -169,84 +145,62 @@ export const AdminPage: React.FC = () => {
       const created = await adminService.createUser(newUserData);
       setUsers((prev) => [created, ...prev]);
       addToast('New user account created successfully.', 'success');
-    } catch (_e) {
-      const localUser: AdminUser = {
-        ...newUserData,
-        id: `u-${Date.now().toString().slice(-4)}`,
-        progress: 0,
-        quizzesCompleted: 0,
-        experimentsCount: 0,
-        lastActive: 'Just registered',
-        createdAt: new Date().toISOString().split('T')[0],
-      };
-      setUsers((prev) => [localUser, ...prev]);
-      addToast('User account created.', 'success');
+    } catch (err: any) {
+      addToast(err.response?.data?.message || 'Failed to create user.', 'error');
     }
   };
 
-  // Question Actions
+  // Question Actions - Real Backend Integration
   const handleAddQuestion = async (qData: Omit<AdminQuestion, 'id' | 'successRate'>) => {
     try {
       const created = await adminService.createQuestion(qData);
       setQuestions((prev) => [created, ...prev]);
       addToast('New question published to database.', 'success');
-    } catch (_e) {
-      const localQ: AdminQuestion = {
-        ...qData,
-        id: `q-${Date.now().toString().slice(-4)}`,
-        successRate: 100,
-      };
-      setQuestions((prev) => [localQ, ...prev]);
-      addToast('Question added.', 'success');
+    } catch (err: any) {
+      addToast(err.response?.data?.message || 'Failed to add question.', 'error');
     }
   };
 
   const handleDeleteQuestion = async (qId: string) => {
     try {
       await adminService.deleteQuestion(qId);
-    } catch (_e) {
-      // Offline fallback
+      setQuestions((prev) => prev.filter((q) => q.id !== qId));
+      addToast('Question removed from curriculum.', 'info');
+    } catch (err: any) {
+      addToast(err.response?.data?.message || 'Failed to delete question.', 'error');
     }
-    setQuestions((prev) => prev.filter((q) => q.id !== qId));
-    addToast('Question removed from curriculum.', 'info');
   };
 
-  // Announcement Actions
+  // Announcement Actions - Real Backend Integration
   const handleAddAnnouncement = async (annData: Omit<AdminAnnouncement, 'id' | 'createdAt'>) => {
     try {
       const created = await adminService.createAnnouncement(annData);
       setAnnouncements((prev) => [created, ...prev]);
       addToast('Broadcast published to student dashboards.', 'success');
-    } catch (_e) {
-      const localAnn: AdminAnnouncement = {
-        ...annData,
-        id: `ann-${Date.now().toString().slice(-4)}`,
-        createdAt: new Date().toISOString().split('T')[0],
-      };
-      setAnnouncements((prev) => [localAnn, ...prev]);
-      addToast('Announcement posted.', 'success');
+    } catch (err: any) {
+      addToast(err.response?.data?.message || 'Failed to create announcement.', 'error');
     }
   };
 
   const handleToggleAnnouncement = async (id: string) => {
     try {
       await adminService.toggleAnnouncement(id);
-    } catch (_e) {
-      // Offline fallback
+      setAnnouncements((prev) =>
+        prev.map((a) => (a.id === id ? { ...a, active: !a.active } : a))
+      );
+    } catch (err: any) {
+      addToast(err.response?.data?.message || 'Failed to toggle announcement.', 'error');
     }
-    setAnnouncements((prev) =>
-      prev.map((a) => (a.id === id ? { ...a, active: !a.active } : a))
-    );
   };
 
   const handleDeleteAnnouncement = async (id: string) => {
     try {
       await adminService.deleteAnnouncement(id);
-    } catch (_e) {
-      // Offline fallback
+      setAnnouncements((prev) => prev.filter((a) => a.id !== id));
+      addToast('Announcement deleted.', 'info');
+    } catch (err: any) {
+      addToast(err.response?.data?.message || 'Failed to delete announcement.', 'error');
     }
-    setAnnouncements((prev) => prev.filter((a) => a.id !== id));
-    addToast('Announcement deleted.', 'info');
   };
 
   return (
@@ -255,7 +209,7 @@ export const AdminPage: React.FC = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
           <PageHeader
             title="OSLab Administrative Console"
-            description="Manage student rosters, customize curriculum quiz assessments, inspect laboratory telemetry, and broadcast announcements."
+            description="Live dashboard monitoring real registered students, curriculum questions, and simulator telemetry."
           />
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <Button 
@@ -336,55 +290,64 @@ export const AdminPage: React.FC = () => {
         </button>
       </div>
 
-      {/* Tab Panels */}
-      {activeTab === 'overview' && (
-        <AdminOverview
-          users={users}
-          questions={questions}
-          announcements={announcements}
-          simStats={simStats}
-          onNavigateTab={(tab) => setActiveTab(tab as any)}
-        />
-      )}
+      {loading && users.length === 0 ? (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '4rem 0', flexDirection: 'column', gap: '1rem' }}>
+          <Spinner size="lg" />
+          <span style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-sm)' }}>Loading live platform telemetry...</span>
+        </div>
+      ) : (
+        <>
+          {/* Tab Panels */}
+          {activeTab === 'overview' && (
+            <AdminOverview
+              users={users}
+              questions={questions}
+              announcements={announcements}
+              simStats={simStats}
+              onNavigateTab={(tab) => setActiveTab(tab as any)}
+            />
+          )}
 
-      {activeTab === 'users' && (
-        <AdminUsers
-          users={users}
-          onUpdateRole={handleUpdateRole}
-          onToggleStatus={handleToggleStatus}
-          onResetProgress={handleResetProgress}
-          onDeleteUser={handleDeleteUser}
-          onAddUser={handleAddUser}
-        />
-      )}
+          {activeTab === 'users' && (
+            <AdminUsers
+              users={users}
+              onUpdateRole={handleUpdateRole}
+              onToggleStatus={handleToggleStatus}
+              onResetProgress={handleResetProgress}
+              onDeleteUser={handleDeleteUser}
+              onAddUser={handleAddUser}
+            />
+          )}
 
-      {activeTab === 'quizzes' && (
-        <AdminQuizzes
-          questions={questions}
-          onAddQuestion={handleAddQuestion}
-          onDeleteQuestion={handleDeleteQuestion}
-        />
-      )}
+          {activeTab === 'quizzes' && (
+            <AdminQuizzes
+              questions={questions}
+              onAddQuestion={handleAddQuestion}
+              onDeleteQuestion={handleDeleteQuestion}
+            />
+          )}
 
-      {activeTab === 'labs' && <AdminLabs simStats={simStats} />}
+          {activeTab === 'labs' && <AdminLabs simStats={simStats} />}
 
-      {activeTab === 'broadcasts' && (
-        <AdminBroadcasts
-          announcements={announcements}
-          onAddAnnouncement={handleAddAnnouncement}
-          onToggleAnnouncement={handleToggleAnnouncement}
-          onDeleteAnnouncement={handleDeleteAnnouncement}
-        />
-      )}
+          {activeTab === 'broadcasts' && (
+            <AdminBroadcasts
+              announcements={announcements}
+              onAddAnnouncement={handleAddAnnouncement}
+              onToggleAnnouncement={handleToggleAnnouncement}
+              onDeleteAnnouncement={handleDeleteAnnouncement}
+            />
+          )}
 
-      {activeTab === 'terminal' && (
-        <AdminTerminal
-          users={users}
-          questions={questions}
-          announcements={announcements}
-          simStats={simStats}
-          onAddAnnouncement={handleAddAnnouncement}
-        />
+          {activeTab === 'terminal' && (
+            <AdminTerminal
+              users={users}
+              questions={questions}
+              announcements={announcements}
+              simStats={simStats}
+              onAddAnnouncement={handleAddAnnouncement}
+            />
+          )}
+        </>
       )}
     </div>
   );

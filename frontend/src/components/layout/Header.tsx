@@ -111,14 +111,16 @@ const Header: React.FC = () => {
                   <UserIcon size={16} />
                   <span>My Profile</span>
                 </Link>
-                <Link 
-                  to="/admin" 
-                  className={styles.dropdownItem}
-                  onClick={() => setDropdownOpen(false)}
-                >
-                  <ShieldCheck size={16} />
-                  <span>Admin Console</span>
-                </Link>
+                {(user.role === 'admin' || user.email?.toLowerCase().includes('admin')) && (
+                  <Link 
+                    to="/admin" 
+                    className={styles.dropdownItem}
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    <ShieldCheck size={16} />
+                    <span>Admin Console</span>
+                  </Link>
+                )}
                 <hr className={styles.divider} />
                 <button onClick={handleLogout} className={styles.dropdownItemDanger}>
                   <LogOut size={16} />
