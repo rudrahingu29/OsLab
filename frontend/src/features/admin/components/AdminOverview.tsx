@@ -29,8 +29,9 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({
   simStats,
   onNavigateTab,
 }) => {
+  const totalUsersCount = users.length;
   const totalStudents = users.filter((u) => u.role === 'student').length;
-  const activeStudents = users.filter((u) => u.role === 'student' && u.status === 'active').length;
+  const totalAdmins = users.filter((u) => u.role === 'admin').length;
   const totalSimulations = simStats.reduce((acc, curr) => acc + curr.runsCount, 0);
   const avgQuizSuccess = Math.round(
     questions.reduce((acc, q) => acc + q.successRate, 0) / (questions.length || 1)
@@ -46,9 +47,11 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({
             <Users size={22} />
           </div>
           <div className={styles.statInfo}>
-            <span className={styles.statLabel}>Total Students</span>
-            <div className={styles.statValue}>{totalStudents}</div>
-            <span className={styles.statSub}>{activeStudents} active learners</span>
+            <span className={styles.statLabel}>Total Registered Users</span>
+            <div className={styles.statValue}>{totalUsersCount}</div>
+            <span className={styles.statSub}>
+              {totalStudents} student{totalStudents === 1 ? '' : 's'} • {totalAdmins} admin{totalAdmins === 1 ? '' : 's'}
+            </span>
           </div>
         </Card>
 
